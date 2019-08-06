@@ -579,7 +579,7 @@ source_set("electron_lib") {
     ]
     deps += [
       "//components/viz/service",
-      "//services/viz/public/interfaces",
+      "//services/viz/public/mojom",
       "//ui/compositor",
     ]
   }
