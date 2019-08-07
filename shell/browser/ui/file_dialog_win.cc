@@ -226,13 +226,13 @@ bool ShowOpenDialogSync(const DialogSettings& settings,
     return false;
 
   DWORD options = FOS_FORCEFILESYSTEM | FOS_FILEMUSTEXIST;
-  if (settings.properties & FILE_DIALOG_OPEN_DIRECTORY)
+  if (settings.properties & OPEN_DIALOG_OPEN_DIRECTORY)
     options |= FOS_PICKFOLDERS;
-  if (settings.properties & FILE_DIALOG_MULTI_SELECTIONS)
+  if (settings.properties & OPEN_DIALOG_MULTI_SELECTIONS)
     options |= FOS_ALLOWMULTISELECT;
-  if (settings.properties & FILE_DIALOG_SHOW_HIDDEN_FILES)
+  if (settings.properties & OPEN_DIALOG_SHOW_HIDDEN_FILES)
     options |= FOS_FORCESHOWHIDDEN;
-  if (settings.properties & FILE_DIALOG_PROMPT_TO_CREATE)
+  if (settings.properties & OPEN_DIALOG_PROMPT_TO_CREATE)
     options |= FOS_CREATEPROMPT;
   file_open_dialog->SetOptions(options);
 
@@ -292,8 +292,13 @@ bool ShowSaveDialogSync(const DialogSettings& settings, base::FilePath* path) {
   if (FAILED(hr))
     return false;
 
-  file_save_dialog->SetOptions(FOS_FORCEFILESYSTEM | FOS_PATHMUSTEXIST |
-                               FOS_OVERWRITEPROMPT);
+  DWORD options = FOS_FORCEFILESYSTEM | FOS_PATHMUSTEXIST | FOS_OVERWRITEPROMPT;
+  if (settings.properties & SAVE_DIALOG_SHOW_HIDDEN_FILES)
+    options |= FOS_FORCESHOWHIDDEN;
+  if (settings.properties & SAVE_DIALOG_DONT_ADD_TO_RECENT)
+    options |= FOS_DONTADDTORECENT;
+
+  file_save_dialog->SetOptions(options);
   ApplySettings(file_save_dialog, settings);
   hr = ShowFileDialog(file_save_dialog, settings);
 
